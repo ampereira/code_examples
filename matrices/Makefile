@@ -8,17 +8,25 @@ SHELL = /bin/sh
 
 DEFINES = -Dextname
 
-BIN_NAME = static_poly
+BIN_NAME = matrix_mult
 
-CXX        = g++
-LD         = g++
+CXX        = g++-4.9
+LD         = g++-4.9
 
 CXXFLAGS   = -Wall -Wextra --std=c++11 -lspa
+
+ifeq ($(AVX),yes)
+	CXXFLAGS += -mavx -DAVX
+else
+	ifeq ($(SSE),yes)
+		CXXFLAGS += -msse4.1 -DSSE
+	endif
+endif
 
 ifeq ($(DEBUG),yes)
 	CXXFLAGS += -ggdb3
 else
-	CXXFLAGS += -O3
+#CXXFLAGS += -O3
 endif
 
 SPA_LIB=/Users/andre/PhD/spa
