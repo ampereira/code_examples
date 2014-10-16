@@ -2,6 +2,7 @@
 #include <iostream>
 #include <spa.h>
 #include <immintrin.h>
+#include <omp.h>
 
 #define SIZE 1024	// Only powers of 2 to simplify the code
 
