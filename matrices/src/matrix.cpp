@@ -44,6 +44,7 @@ void matrixMultNaive (void) {
 	for (unsigned i = 0; i < SIZE; ++i) {
 		for (unsigned j = 0; j < SIZE; ++j) {
 			result[i][j] = 0;
+			#pragma vector always
 			for (unsigned k = 0; k < SIZE; ++k) {
 				result[i][j] += m1[i][k] * m2[k][j];
 			}
