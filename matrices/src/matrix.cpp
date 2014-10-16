@@ -4,7 +4,7 @@
 #include <immintrin.h>
 #include <omp.h>
 
-#define SIZE 1024	// Only powers of 2 to simplify the code
+#define SIZE 8192	// Only powers of 2 to simplify the code
 
 #ifdef AVX
 	#define VEC_SIZE SIZE/8

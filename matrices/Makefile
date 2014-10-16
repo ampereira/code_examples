@@ -28,8 +28,12 @@ endif
 
 ifeq ($(DEBUG),yes)
 	CXXFLAGS += -ggdb3
-else
+endif
+
+ifeq ($(OPTIM),yes)
 	CXXFLAGS += -O3
+else
+	CXXFLAGS += -O0
 endif
 
 SPA_LIB=/Users/andre/PhD/spa
