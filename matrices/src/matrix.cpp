@@ -3,7 +3,8 @@
 #include <spa.h>
 #include <immintrin.h>
 
-#define SIZE 128
+#define SIZE 1024	// Only powers of 2 to simplify the code
+
 #ifdef AVX
 	#define VEC_SIZE SIZE/8
 #elif SSE
@@ -19,8 +20,8 @@
  *		   not used anymore
  *		-> 
  *		-> Tiling
- *		-> use gcc auto vectorisation and analyse the report
- *		-> use gcc -O1,2,3
+ *		-> use icc auto vectorisation and analyse the report
+ *		-> use icc -O1,2,3
  */
 
 using namespace std;
@@ -66,12 +67,64 @@ void matrixMultOpt1 (void) {
 	}
 }
 
+// What is the difference from the Opt1?
+// Why is this slower/faster?
+void matrixMultOpt1v2 (void) {
+	float x;
+
+	for (unsigned i = 0; i < SIZE; ++i) {
+		for (unsigned j = 0; j < SIZE; ++j) {
+			x = 0;
+			for (unsigned k = 0; k < SIZE; ++k) {
+				x += m1[i][k] * m2[k][j];
+			}
+			result[i][j] = x;
+		}
+	}
+}
+
+
+// Second optimisation - they stack!
+// uses blocking to improve cache usage
+// find the best block size!
+// optional: change code to allow for any block size
+void matrixMultOpt2 (void) {
+	float x;
+	unsigned s = 16;	// block size s * s
+
+	for(unsigned jj = 0; jj < SIZE; jj += s) {
+		for(unsigned kk = 0; kk < SIZE; kk += s) {
+			for(unsigned i = 0; i < SIZE; ++i) {
+//				for(unsigned j = jj; j < ((jj + s) > SIZE ? SIZE : (jj + s)); ++j) {
+				for(unsigned j = jj; j < jj + s; ++j) {
+					x = 0;
+//					for(unsigned k = kk; k < ((kk + s) > SIZE ? SIZE : (kk + s)); ++k) {
+					for(unsigned k = kk; k < kk + s; ++k) {
+						x += m1[i][k] * m2[k][j];
+					}
+					result[i][j] += x;
+				}
+			}
+		}
+	}
+}
+
+
 void matrixAddNaive (void) {
 	for (unsigned i = 0; i < SIZE; ++i) {
 		for (unsigned j = 0; j < SIZE; ++j) {
 			result[i][j] = m1[i][j] + m2[i][j];
 		}
 	}
+}
+
+// Uses only one loop
+// Easier to vectorise... But why is it slower?
+void matrixAddOpt1 (void) {
+	unsigned size = SIZE * SIZE;
+
+	for (unsigned i = 0; i < size; ++i)
+			result[(int)(i / SIZE - 0.5)][i % SIZE] = m1[(int)(i / SIZE - 0.5)][i % SIZE] + m2[(int)(i / SIZE - 0.5)][i % SIZE];
 }
 
 // Using avx intrinsics
@@ -123,9 +176,9 @@ int main (int argc, char *argv[]) {
 
 	fillMatrices();
 
-	meas1.kbest(matrixAddNaive, th, k, min, max);
+	meas1.kbest(matrixMultNaive, th, k, min, max);
 	meas1.report(Report::Verbose);
-	meas2.kbest(matrixAddVec, th, k, min, max);
+	meas2.kbest(matrixMultOpt2, th, k, min, max);
 	meas2.report(Report::Verbose);
 
 	return 1;

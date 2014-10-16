@@ -10,10 +10,13 @@ DEFINES = -Dextname
 
 BIN_NAME = matrix_mult
 
-CXX        = g++-4.9
-LD         = g++-4.9
+#CXX = g++-4.9
+#LD  = g++-4.9
 
-CXXFLAGS   = -Wall -Wextra --std=c++11 -lspa
+CXX = icpc
+LD  = icpc
+
+CXXFLAGS   = -Wall -Wextra --std=c++11 -vec-report3
 
 ifeq ($(AVX),yes)
 	CXXFLAGS += -mavx -DAVX
@@ -26,13 +29,12 @@ endif
 ifeq ($(DEBUG),yes)
 	CXXFLAGS += -ggdb3
 else
-#CXXFLAGS += -O3
+#	CXXFLAGS += -O3
 endif
 
 SPA_LIB=/Users/andre/PhD/spa
-COMMON_HEADERS=/Users/andre/PhD/code_examples/common
 
-INCLUDES = -I$(SPA_LIB)/src -I$(COMMON_HEADERS) -L$(SPA_LIB)/lib
+INCLUDES = -I$(SPA_LIB)/src -L$(SPA_LIB)/lib
 
 ################################################################################
 # Control awesome stuff
@@ -55,13 +57,13 @@ vpath %.cpp $(SRC_DIR)
 .DEFAULT_GOAL = all
 
 $(BUILD_DIR)/%.d: %.cpp
-	$(CXX) -M $(CXXFLAGS) $(INCLUDES) $< -o $@
+	$(CXX) -M $(CXXFLAGS) $(INCLUDES) $< -o $@ -lspa
 
 $(BUILD_DIR)/%.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@ -lspa
 
 $(BIN_DIR)/$(BIN_NAME): $(DEPS) $(OBJ)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(OBJ)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(OBJ) -lspa
 
 checkdirs:
 	@mkdir -p $(BUILD_DIR)
