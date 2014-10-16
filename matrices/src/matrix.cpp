@@ -31,7 +31,6 @@ float m1[SIZE][SIZE], m2[SIZE][SIZE], result[SIZE][SIZE];
 void fillMatrices (void) {
 
 	for (unsigned i = 0; i < SIZE; ++i) {
-		#pragma ivdep
 		for (unsigned j = 0; j < SIZE; ++j) {
 			m1[i][j] = ((float) rand()) / ((float) RAND_MAX);
 			m2[i][j] = ((float) rand()) / ((float) RAND_MAX);
