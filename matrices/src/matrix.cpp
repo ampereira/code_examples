@@ -28,9 +28,9 @@ using namespace std;
 
 float m1[SIZE][SIZE], m2[SIZE][SIZE], result[SIZE][SIZE];
 
-#pragma ivdep
 void fillMatrices (void) {
 
+#pragma ivdep
 	for (unsigned i = 0; i < SIZE; ++i) {
 		for (unsigned j = 0; j < SIZE; ++j) {
 			m1[i][j] = ((float) rand()) / ((float) RAND_MAX);
