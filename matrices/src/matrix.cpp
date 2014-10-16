@@ -44,7 +44,7 @@ void matrixMultNaive (void) {
 	for (unsigned i = 0; i < SIZE; ++i) {
 		for (unsigned j = 0; j < SIZE; ++j) {
 			result[i][j] = 0;
-			#pragma vector always
+			//#pragma vector always
 			for (unsigned k = 0; k < SIZE; ++k) {
 				result[i][j] += m1[i][k] * m2[k][j];
 			}
@@ -58,6 +58,7 @@ void matrixMultNaive (void) {
 void matrixMultOpt1 (void) {
 
 	for (unsigned i = 0; i < SIZE; ++i) {
+		#pragma vector always
 		for (unsigned j = 0; j < SIZE; ++j) {
 			float x = 0;
 			for (unsigned k = 0; k < SIZE; ++k) {
