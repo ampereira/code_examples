@@ -16,7 +16,7 @@ BIN_NAME = matrix_mult
 CXX = icpc
 LD  = icpc
 
-CXXFLAGS   = -Wall -Wextra --std=c++11 -vec-report3
+CXXFLAGS   = -Wall -Wextra --std=c++11 -vec-report3 -openmp
 
 ifeq ($(AVX),yes)
 	CXXFLAGS += -mavx -DAVX
@@ -29,7 +29,7 @@ endif
 ifeq ($(DEBUG),yes)
 	CXXFLAGS += -ggdb3
 else
-#	CXXFLAGS += -O3
+	CXXFLAGS += -O3
 endif
 
 SPA_LIB=/Users/andre/PhD/spa
