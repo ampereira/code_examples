@@ -75,7 +75,7 @@ void matrixMultOpt1 (void) {
 void matrixMultOpt1v2 (void) {
 	float x;
 
-	#pragma omp simd collapse(2)
+	#pragma omp parallel for
 	for (unsigned i = 0; i < SIZE; ++i) {
 		for (unsigned j = 0; j < SIZE; ++j) {
 			x = 0;
