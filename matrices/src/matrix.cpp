@@ -28,6 +28,7 @@ using namespace std;
 
 float m1[SIZE][SIZE], m2[SIZE][SIZE], result[SIZE][SIZE];
 
+#pragma ivdep
 void fillMatrices (void) {
 
 	for (unsigned i = 0; i < SIZE; ++i) {
