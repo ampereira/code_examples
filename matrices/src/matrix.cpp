@@ -3,8 +3,10 @@
 #include <spa.h>
 #include <immintrin.h>
 #include <omp.h>
+#include <string>
+#include <vector>
 
-#define SIZE 8192	// Only powers of 2 to simplify the code
+#define SIZE 64	// Only powers of 2 to simplify the code
 
 #ifdef AVX
 	#define VEC_SIZE SIZE/8
@@ -178,10 +180,24 @@ int main (int argc, char *argv[]) {
 	unsigned min = atoi(argv[3]);
 	unsigned max = atoi(argv[4]);
 
+	string c = "PAPI_TOT_INS";
+	vector<string> vc;
+	vc.push_back(c);
+	Hardware::Measure mw (vc);
+
+
 	fillMatrices();
 
-	meas1.kbest(matrixMultNaive, th, k, min, max);
+	meas1.kbest(matrixAddNaive, th, k, min, max);
 	meas1.report(Report::Verbose);
+
+	for (unsigned i = 0; i < 5; ++i) {
+		mw.start();
+		matrixAddNaive();
+		mw.stop();
+	}
+
+	mw.report();
 
 	return 1;
 }
