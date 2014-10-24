@@ -166,7 +166,7 @@ void matrixAddVec (void) {
 #endif
 
 int main (int argc, char *argv[]) {
-	Measure meas1, meas2, meas3, meas4;
+	Timer::Measure meas1;
 
 	if (argc < 5) {
 		cerr << "Not enough arguments" << endl;
@@ -182,12 +182,6 @@ int main (int argc, char *argv[]) {
 
 	meas1.kbest(matrixMultNaive, th, k, min, max);
 	meas1.report(Report::Verbose);
-	meas2.kbest(matrixMultOpt1, th, k, min, max);
-	meas2.report(Report::Verbose);
-	meas3.kbest(matrixMultOpt1v2, th, k, min, max);
-	meas3.report(Report::Verbose);
-	meas4.kbest(matrixMultOpt2, th, k, min, max);
-	meas4.report(Report::Verbose);
 
 	return 1;
 }
