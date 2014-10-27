@@ -183,8 +183,8 @@ int main (int argc, char *argv[]) {
 	string c = "PAPI_TOT_INS";
 	vector<string> vc;
 	vc.push_back(c);
-	Hardware::Measure mw (vc);
 
+	Hardware::newMeasure (vc);
 
 	fillMatrices();
 
@@ -192,9 +192,9 @@ int main (int argc, char *argv[]) {
 	meas1.report(Report::Verbose);
 
 	for (unsigned i = 0; i < 5; ++i) {
-		mw.start();
+		Hardware::start(0);
 		matrixAddNaive();
-		mw.stop();
+		Hardware::stop(0);
 	}
 
 	mw.report();
