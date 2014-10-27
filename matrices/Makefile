@@ -10,13 +10,16 @@ DEFINES = -Dextname
 
 BIN_NAME = matrix_mult
 
-#CXX = g++-4.9
-#LD  = g++-4.9
+CXX = g++
+LD  = g++
 
-CXX = icpc
-LD  = icpc
+#CXX = icpc
+#LD  = icpc
 
-CXXFLAGS   = -Wall -Wextra --std=c++11 -vec-report3 -openmp
+#-vec-report3 -openmp
+
+
+CXXFLAGS   = -Wall -Wextra --std=c++11
 
 ifeq ($(AVX),yes)
 	CXXFLAGS += -mavx -DAVX
@@ -36,7 +39,9 @@ else
 	CXXFLAGS += -O0
 endif
 
-SPA_LIB=/Users/andre/PhD/spa
+SPA_LIB=/home/ampereira/spa
+PAPI_DIR=/home/ampereira/tools/papi-gcc4.9.0
+LIBS=-lspa
 
 INCLUDES = -I$(SPA_LIB)/src -L$(SPA_LIB)/lib
 
@@ -61,19 +66,23 @@ vpath %.cpp $(SRC_DIR)
 .DEFAULT_GOAL = all
 
 $(BUILD_DIR)/%.d: %.cpp
-	$(CXX) -M $(CXXFLAGS) $(INCLUDES) $< -o $@ -lspa
+	$(CXX) -M $(CXXFLAGS) $(INCLUDES) $< -o $@ $(LIBS)
 
 $(BUILD_DIR)/%.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@ -lspa
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@ $(LIBS)
 
 $(BIN_DIR)/$(BIN_NAME): $(DEPS) $(OBJ)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(OBJ) -lspa
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(OBJ) $(LIBS)
 
 checkdirs:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(BIN_DIR)
 
 all: checkdirs $(BIN_DIR)/$(BIN_NAME)
+
+papi: CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib
+papi: LIBS+= -lpapi
+papi: all
 
 clean:
 	rm -f $(BUILD_DIR)/* $(BIN_DIR)/* 
