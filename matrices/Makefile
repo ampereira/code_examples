@@ -21,6 +21,10 @@ LD  = g++
 
 CXXFLAGS   = -Wall -Wextra --std=c++11
 
+# PAPI stuff
+CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib -DPAPI_SUPPORT
+LIBS+= -lpapi
+
 ifeq ($(AVX),yes)
 	CXXFLAGS += -mavx -DAVX
 else
@@ -64,10 +68,6 @@ vpath %.cpp $(SRC_DIR)
 ################################################################################
 
 
-papi: CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib -DPAPI_SUPPORT
-papi: LIBS+= -lpapi
-papi: all
-	
 .DEFAULT_GOAL = all
 
 $(BUILD_DIR)/%.d: %.cpp
