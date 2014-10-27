@@ -197,7 +197,7 @@ int main (int argc, char *argv[]) {
 		Hardware::stop(0);
 	}
 
-	mw.report();
+	Hardware::report();
 
 	return 1;
 }
