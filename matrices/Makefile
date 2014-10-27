@@ -80,7 +80,7 @@ checkdirs:
 
 all: checkdirs $(BIN_DIR)/$(BIN_NAME)
 
-papi: CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib
+papi: CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib -DPAPI_SUPPORT
 papi: LIBS+= -lpapi
 papi: all
 
