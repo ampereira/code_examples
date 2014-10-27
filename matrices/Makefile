@@ -63,6 +63,11 @@ vpath %.cpp $(SRC_DIR)
 # Rules
 ################################################################################
 
+
+papi: CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib -DPAPI_SUPPORT
+papi: LIBS+= -lpapi
+papi: all
+	
 .DEFAULT_GOAL = all
 
 $(BUILD_DIR)/%.d: %.cpp
@@ -79,10 +84,6 @@ checkdirs:
 	@mkdir -p $(BIN_DIR)
 
 all: checkdirs $(BIN_DIR)/$(BIN_NAME)
-
-papi: CXX_FLAGS+=-I$(PAPI_DIR)/include -L$(PAPI_DIR)/lib -DPAPI_SUPPORT
-papi: LIBS+= -lpapi
-papi: all
 
 clean:
 	rm -f $(BUILD_DIR)/* $(BIN_DIR)/* 
