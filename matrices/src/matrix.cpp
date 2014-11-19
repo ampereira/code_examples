@@ -21,7 +21,7 @@
  *	for the multiplication:
  *		-> use a local variable to put the result on registers before it's
  *		   not used anymore
- *		-> 
+ *		-> powers of 2 vs random size (vec alignment optim) without tiling
  *		-> Tiling
  *		-> use icc auto vectorisation and analyse the report
  *		-> use icc -O1,2,3
@@ -50,6 +50,21 @@ void matrixMultNaive (void) {
 			//#pragma vector always
 			for (unsigned k = 0; k < SIZE; ++k) {
 				result[i][j] += m1[i][k] * m2[k][j];
+			}
+		}
+	}
+}
+
+// Unoptimised version
+// With alias unoptimisation
+void matrixMultNaiveAlias (float **mat1, float **ma2, float **res) {
+
+	for (unsigned i = 0; i < SIZE; ++i) {
+		for (unsigned j = 0; j < SIZE; ++j) {
+			res[i][j] = 0;
+			//#pragma vector always
+			for (unsigned k = 0; k < SIZE; ++k) {
+				res[i][j] += mat1[i][k] * mat2[k][j];
 			}
 		}
 	}
@@ -98,6 +113,7 @@ void matrixMultOpt2 (void) {
 	float x;
 	unsigned s = 16;	// block size s * s
 
+//  #pragma omp parallel for
 	for(unsigned jj = 0; jj < SIZE; jj += s) {
 		for(unsigned kk = 0; kk < SIZE; kk += s) {
 			for(unsigned i = 0; i < SIZE; ++i) {
